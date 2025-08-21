@@ -1,9 +1,11 @@
 export type Item = {
   id: number;
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  r: number;
+  positionX: number;
+  positionY: number;
+  velocityX: number;
+  velocityY: number;
+  radius: number;
   level: number;
+  settled?: boolean;
+  mergeCooldown?: number;
 };
