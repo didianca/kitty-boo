@@ -6,3 +6,4 @@ export const FLOOR_BOUNCE_FACTOR = 0.35;
 export const WALL_BOUNCE_FACTOR = 0.2;
 export const FRICTION_FACTOR = 0.95;
 export const CONTAINER_INSET = 8;
+export const PREVIEW_Y = 60; // Y position for the preview item

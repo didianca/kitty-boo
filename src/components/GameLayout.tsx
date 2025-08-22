@@ -8,23 +8,11 @@ type GameLayoutProps = {
 export function GameLayout({ children }: GameLayoutProps) {
   const layoutRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
-  const [cornerSpace, setCornerSpace] = useState({ left: 0, bottom: 0, right: 0, top: 0 });
+  const [, forceUpdate] = useState(0);
 
   useLayoutEffect(() => {
-    function updateSpace() {
-      if (!layoutRef.current || !canvasRef.current) return;
-      const layoutRect = layoutRef.current.getBoundingClientRect();
-      const canvasRect = canvasRef.current.getBoundingClientRect();
-      setCornerSpace({
-        left: canvasRect.left - layoutRect.left,
-        bottom: layoutRect.bottom - canvasRect.bottom,
-        right: layoutRect.right - canvasRect.right,
-        top: canvasRect.top - layoutRect.top,
-      });
-    }
-    updateSpace();
-    window.addEventListener("resize", updateSpace);
-    return () => window.removeEventListener("resize", updateSpace);
+    // Force a re-render after the first layout so refs are set
+    forceUpdate((n) => n + 1);
   }, []);
 
   return (
@@ -49,9 +37,14 @@ export function GameLayout({ children }: GameLayoutProps) {
           position: "absolute",
           bottom: 0,
           left: 0,
-          width: `${Math.max(0, layoutRef.current && canvasRef.current
-            ? (canvasRef.current.getBoundingClientRect().left - layoutRef.current.getBoundingClientRect().left + canvasRef.current.offsetWidth * 0.3)
-            : 0)}px`,
+          width: `${Math.max(
+            0,
+            layoutRef.current && canvasRef.current
+              ? (canvasRef.current.getBoundingClientRect().left -
+                  layoutRef.current.getBoundingClientRect().left +
+                  canvasRef.current.offsetWidth * 0.3)
+              : 0
+          )}px`,
           height: "auto",
           opacity: 1,
           pointerEvents: "none",
@@ -76,9 +69,14 @@ export function GameLayout({ children }: GameLayoutProps) {
           position: "absolute",
           top: 0,
           right: 0,
-          width: `${Math.max(0, layoutRef.current && canvasRef.current
-            ? (layoutRef.current.getBoundingClientRect().right - canvasRef.current.getBoundingClientRect().right + canvasRef.current.offsetWidth * 0.3)
-            : 0)}px`,
+          width: `${Math.max(
+            0,
+            layoutRef.current && canvasRef.current
+              ? (layoutRef.current.getBoundingClientRect().right -
+                  canvasRef.current.getBoundingClientRect().right +
+                  canvasRef.current.offsetWidth * 0.3)
+              : 0
+          )}px`,
           height: "auto",
           opacity: 1,
           pointerEvents: "none",

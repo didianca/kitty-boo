@@ -12,6 +12,7 @@ import { GameCanvas } from "./GameCanvas";
 import { ResetButton } from "./ResetButton";
 import { addScoreToLeaderboard } from "../utils/leaderboard.util";
 import { Leaderboard } from "./Leaderboard";
+import { GameOverPopup } from "./GameOver";
 
 export default function App() {
   const canvasReference = useRef<HTMLCanvasElement | null>(null);
@@ -249,6 +250,12 @@ export default function App() {
             </button>
           </div>
         </div>
+      )}
+      {gameOver && (
+        <GameOverPopup
+          score={score}
+          onReset={resetGame}
+        />
       )}
     </GameLayout>
   );

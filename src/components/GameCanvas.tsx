@@ -61,25 +61,17 @@ export function GameCanvas({
     };
 
     const handlePointerUp = (event: PointerEvent) => {
+      if (droppingRef.current) return;
       if (!canvas) return;
-      if (leaderboardOpen) return; // Prevent drop if leaderboard is open
+      if (leaderboardOpen) return;
       const rect = canvas.getBoundingClientRect();
       const y = event.clientY - rect.top;
-      if (!droppingRef.current && isBelowGameOverLine(y, rect)) {
+      if (isBelowGameOverLine(y, rect)) {
         handleDrop();
         droppingRef.current = true;
         setTimeout(() => {
           droppingRef.current = false;
-        }, 100); // reset after a short delay
-      }
-    };
-
-    const handleClick = (event: MouseEvent) => {
-      if (leaderboardOpen) return; // Prevent drop if leaderboard is open
-      const rect = (event.currentTarget as HTMLCanvasElement).getBoundingClientRect();
-      const y = event.clientY - rect.top;
-      if (isBelowGameOverLine(y, rect)) {
-        handleDrop();
+        }, 100);
       }
     };
 
@@ -92,15 +84,13 @@ export function GameCanvas({
 
     canvas.addEventListener("pointerdown", handlePointerDown);
     canvas.addEventListener("pointermove", handlePointerMove);
-    window.addEventListener("pointerup", handlePointerUp);
-    canvas.addEventListener("click", handleClick);
+    canvas.addEventListener("pointerup", handlePointerUp);
     canvas.addEventListener("mousemove", handleMouseMove);
 
     return () => {
       canvas.removeEventListener("pointerdown", handlePointerDown);
       canvas.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("pointerup", handlePointerUp);
-      canvas.removeEventListener("click", handleClick);
+      canvas.removeEventListener("pointerup", handlePointerUp);
       canvas.removeEventListener("mousemove", handleMouseMove);
     };
   }, [aimXReference, handleDrop, leaderboardOpen]);

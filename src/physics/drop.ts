@@ -1,8 +1,5 @@
 import type { Item } from "../types";
-import { CANVAS_HEIGHT, CANVAS_WIDTH, CONTAINER_INSET, ITEM_RADIUS_BY_LEVEL } from "../constants";
-
-// Calculate the game over line Y (should match your draw/checkGameOver logic)
-const GAME_OVER_LINE_Y = CONTAINER_INSET + (CANVAS_HEIGHT - 2 * CONTAINER_INSET) * 0.2;
+import { CANVAS_WIDTH, CONTAINER_INSET, ITEM_RADIUS_BY_LEVEL, PREVIEW_Y } from "../constants";
 
 export function drop(
   itemsRef: React.RefObject<Item[]>,
@@ -19,7 +16,7 @@ export function drop(
     CONTAINER_INSET + radius,
     Math.min(CANVAS_WIDTH - CONTAINER_INSET - radius, aimXRef.current)
   );
-  const positionY = GAME_OVER_LINE_Y + radius + 16; // 16px buffer below the line
+  const positionY = PREVIEW_Y + radius; // Use the preview's Y position exactly
   itemsRef.current.push({
     id: idRef.current++,
     positionX,
