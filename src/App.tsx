@@ -1,9 +1,15 @@
-import { useRef, useState, useEffect } from "react";
 import { drop } from "./drop";
 import { physics } from "./physics";
 import { draw } from "./draw";
 import type { Item } from "./types";
-import { CANVAS_WIDTH, CANVAS_HEIGHT } from "./constants";
+import { CANVAS_WIDTH } from "./constants";
+import { setAudioEnabled } from "./physics/sounds";
+import { useRef, useState, useEffect } from "react";
+import { useCallback } from "react";
+import { GameLayout } from "./GameLayout";
+import { AudioToggleButton } from "./AudioToggleButton";
+import { GameCanvas } from "./GameCanvas";
+import { ResetButton } from "./ResetButton";
 
 export default function App() {
   const canvasReference = useRef<HTMLCanvasElement | null>(null);
@@ -14,43 +20,67 @@ export default function App() {
   const [nextItemLevel, setNextItemLevel] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const aimXReference = useRef(CANVAS_WIDTH / 2);
+  const [audioOn, setAudioOn] = useState(true); // <-- change this to useState
+  const [dragging, setDragging] = useState(false);
 
   // Handle dropping a new item
-  const handleDrop = () =>
-    drop(
-      itemsReference,
-      itemIdReference,
-      nextItemLevel,
-      setNextItemLevel,
-      aimXReference,
-      gameOver
-    );
+  const handleDrop = useCallback(
+    () =>
+      drop(
+        itemsReference,
+        itemIdReference,
+        nextItemLevel,
+        setNextItemLevel,
+        aimXReference,
+        gameOver
+      ),
+    [nextItemLevel, gameOver]
+  );
 
   // Pointer aiming and dropping
   useEffect(() => {
     const canvas = canvasReference.current;
     if (!canvas) return;
-    const handlePointerMove = (event: PointerEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      aimXReference.current = ((event.clientX - rect.left) / rect.width) * CANVAS_WIDTH;
-    };
-    const handlePointerDown = () => handleDrop();
 
-    canvas.addEventListener("pointermove", handlePointerMove);
-    canvas.addEventListener("pointerdown", handlePointerDown);
-    return () => {
-      canvas.removeEventListener("pointermove", handlePointerMove);
-      canvas.removeEventListener("pointerdown", handlePointerDown);
+    const handlePointerDown = (event: PointerEvent) => {
+      setDragging(true);
+      const rect = canvas.getBoundingClientRect();
+      aimXReference.current =
+        ((event.clientX - rect.left) / rect.width) * CANVAS_WIDTH;
     };
-  });
+
+    const handlePointerMove = (event: PointerEvent) => {
+      if (!dragging) return;
+      const rect = canvas.getBoundingClientRect();
+      aimXReference.current =
+        ((event.clientX - rect.left) / rect.width) * CANVAS_WIDTH;
+    };
+
+    const handlePointerUp = () => {
+      if (dragging) {
+        handleDrop();
+        setDragging(false);
+      }
+    };
+
+    canvas.addEventListener("pointerdown", handlePointerDown);
+    canvas.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
+
+    return () => {
+      canvas.removeEventListener("pointerdown", handlePointerDown);
+      canvas.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
+    };
+  }, [handleDrop, dragging]);
 
   // Reset game state
-  const resetGame = () => {
+  const resetGame = useCallback(() => {
     itemsReference.current = [];
     setScore(0);
     setGameOver(false);
     setNextItemLevel(0);
-  };
+  }, []);
 
   // Main game loop
   useEffect(() => {
@@ -97,32 +127,28 @@ export default function App() {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [gameOver, nextItemLevel]);
+  }, [gameOver, handleDrop, resetGame]);
+
+  // Audio toggle effect
+  useEffect(() => {
+    setAudioEnabled(audioOn);
+  }, [audioOn]);
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-900 text-gray-100">
-      <div className="flex flex-col gap-3 items-center">
-        <canvas
-          ref={canvasReference}
-          width={CANVAS_WIDTH}
-          height={CANVAS_HEIGHT}
-          className="rounded-2xl shadow-xl border border-gray-700 touch-none select-none"
-          style={{ background: "#111827" }}
-        />
-        <button
-          onClick={handleDrop}
-          className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50"
-          disabled={gameOver}
-        >
-          Drop
-        </button>
-        <button
-          onClick={resetGame}
-          className="px-4 py-2 rounded-xl bg-gray-700 hover:bg-gray-600"
-        >
-          Reset
-        </button>
-      </div>
-    </div>
+    <GameLayout>
+      <AudioToggleButton audioOn={audioOn} setAudioOn={setAudioOn} />
+      <GameCanvas
+        itemsReference={itemsReference}
+        itemIdReference={itemIdReference}
+        nextItemLevel={nextItemLevel}
+        aimXReference={aimXReference}
+        gameOver={gameOver}
+        setScore={setScore}
+        setGameOver={setGameOver}
+        score={score}
+        handleDrop={handleDrop}
+      />
+      <ResetButton onClick={resetGame} />
+    </GameLayout>
   );
 }

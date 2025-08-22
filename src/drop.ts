@@ -1,6 +1,7 @@
 import type { Item } from "./types";
-import { ITEM_RADIUS_BY_LEVEL, CANVAS_WIDTH, CONTAINER_INSET, CANVAS_HEIGHT } from "./constants";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, CONTAINER_INSET, ITEM_RADIUS_BY_LEVEL } from "./constants";
 
+// Calculate the game over line Y (should match your draw/checkGameOver logic)
 const GAME_OVER_LINE_Y = CONTAINER_INSET + (CANVAS_HEIGHT - 2 * CONTAINER_INSET) * 0.2;
 
 export function drop(
@@ -18,7 +19,7 @@ export function drop(
     CONTAINER_INSET + radius,
     Math.min(CANVAS_WIDTH - CONTAINER_INSET - radius, aimXRef.current)
   );
-  const positionY = GAME_OVER_LINE_Y + radius + 8; // Drop well below the game over line
+  const positionY = GAME_OVER_LINE_Y + radius + 16; // 16px buffer below the line
   itemsRef.current.push({
     id: idRef.current++,
     positionX,

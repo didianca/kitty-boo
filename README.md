@@ -103,6 +103,7 @@ Game icons made by the following authors from [www.flaticon.com](https://www.fla
 - https://www.flaticon.com/authors/ina-mella
 - https://www.flaticon.com/authors/lumi
 - https://www.flaticon.com/authors/park-jisun
+- https://www.flaticon.com/authors/flat-icons
 
 > Individual icon licenses can be found in the `/public/icon-license` folder.
 
