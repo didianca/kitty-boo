@@ -1,5 +1,5 @@
 import type { Item } from "../types";
-import { itemImages } from "./itemImages";
+import { itemImages } from "./itemImages.util";
 
 export function drawItem(
   context: CanvasRenderingContext2D,

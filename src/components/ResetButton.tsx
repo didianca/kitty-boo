@@ -1,4 +1,4 @@
-import { COLORS } from "../utils/colors";
+import { COLORS } from "../maps/colors.map";
 
 type ResetButtonProps = {
   onClick: () => void;

@@ -1,5 +1,5 @@
-import soundIcon from "../../public/sound.png"; // adjust path if needed
-import { COLORS } from "../utils/colors";
+import soundIcon from "../../public/sound.png";
+import { COLORS } from "../maps/colors.map";
 
 type AudioToggleButtonProps = {
   audioOn: boolean;
@@ -11,10 +11,6 @@ export function AudioToggleButton({ audioOn, setAudioOn }: AudioToggleButtonProp
     <button
       onClick={() => setAudioOn(!audioOn)}
       style={{
-        position: "absolute",
-        top: 16,
-        right: 16,
-        zIndex: 10,
         background: COLORS.maize,
         border: `2px solid ${COLORS.purple}`,
         borderRadius: "50%",
@@ -26,7 +22,7 @@ export function AudioToggleButton({ audioOn, setAudioOn }: AudioToggleButtonProp
         alignItems: "center",
         justifyContent: "center",
         padding: 0,
-        overflow: "hidden",
+        margin: 0,
       }}
       aria-label={audioOn ? "Mute audio" : "Unmute audio"}
     >
@@ -57,7 +53,7 @@ export function AudioToggleButton({ audioOn, setAudioOn }: AudioToggleButtonProp
               y1={0}
               x2={40}
               y2={40}
-              stroke="#75108B"
+              stroke={COLORS.purple}
               strokeWidth={4}
               strokeLinecap="round"
             />

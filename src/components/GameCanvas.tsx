@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
 import { CANVAS_WIDTH, CANVAS_HEIGHT } from "../constants";
-import { draw } from "../utils/draw";
+import { draw } from "../utils/draw.util";
 import { physics } from "../physics";
 import type { Item } from "../types";
 
@@ -14,6 +14,7 @@ type GameCanvasProps = {
   setGameOver: React.Dispatch<React.SetStateAction<boolean>>;
   score: number;
   handleDrop: () => void;
+  leaderboardOpen?: boolean;
 };
 
 export function GameCanvas({
@@ -26,10 +27,19 @@ export function GameCanvas({
   setGameOver,
   score,
   handleDrop,
+  leaderboardOpen = false,
 }: GameCanvasProps) {
   const canvasReference = useRef<HTMLCanvasElement | null>(null);
   const draggingRef = useRef(false);
   const droppingRef = useRef(false);
+
+  // Helper to check if a y coordinate is below the game over line
+  const isBelowGameOverLine = (y: number, rect: DOMRect) => {
+    const CONTAINER_INSET = 8; // or your actual value
+    const GAME_OVER_LINE_Y =
+      CONTAINER_INSET + (rect.height - 2 * CONTAINER_INSET) * 0.2;
+    return y > GAME_OVER_LINE_Y;
+  };
 
   // Pointer aiming and dropping
   useEffect(() => {
@@ -50,8 +60,12 @@ export function GameCanvas({
         ((event.clientX - rect.left) / rect.width) * CANVAS_WIDTH;
     };
 
-    const handlePointerUp = () => {
-      if (!droppingRef.current) {
+    const handlePointerUp = (event: PointerEvent) => {
+      if (!canvas) return;
+      if (leaderboardOpen) return; // Prevent drop if leaderboard is open
+      const rect = canvas.getBoundingClientRect();
+      const y = event.clientY - rect.top;
+      if (!droppingRef.current && isBelowGameOverLine(y, rect)) {
         handleDrop();
         droppingRef.current = true;
         setTimeout(() => {
@@ -60,13 +74,12 @@ export function GameCanvas({
       }
     };
 
-    const handleClick = () => {
-      if (!droppingRef.current) {
+    const handleClick = (event: MouseEvent) => {
+      if (leaderboardOpen) return; // Prevent drop if leaderboard is open
+      const rect = (event.currentTarget as HTMLCanvasElement).getBoundingClientRect();
+      const y = event.clientY - rect.top;
+      if (isBelowGameOverLine(y, rect)) {
         handleDrop();
-        droppingRef.current = true;
-        setTimeout(() => {
-          droppingRef.current = false;
-        }, 100);
       }
     };
 
@@ -90,7 +103,7 @@ export function GameCanvas({
       canvas.removeEventListener("click", handleClick);
       canvas.removeEventListener("mousemove", handleMouseMove);
     };
-  }, [aimXReference, handleDrop]);
+  }, [aimXReference, handleDrop, leaderboardOpen]);
 
   // Animation and game loop
   useEffect(() => {
@@ -120,7 +133,16 @@ export function GameCanvas({
     };
     animationFrameId = requestAnimationFrame(step);
     return () => cancelAnimationFrame(animationFrameId);
-  }, [itemsReference, setScore, setGameOver, gameOver, itemIdReference, aimXReference, nextItemLevel, score]);
+  }, [
+    itemsReference,
+    setScore,
+    setGameOver,
+    gameOver,
+    itemIdReference,
+    aimXReference,
+    nextItemLevel,
+    score,
+  ]);
 
   return (
     <canvas
@@ -129,10 +151,10 @@ export function GameCanvas({
       height={CANVAS_HEIGHT}
       className="rounded-2xl shadow-xl border border-gray-700 touch-none select-none"
       style={{ background: "#111827" }}
-      onTouchStart={e => {
+      onTouchStart={(e) => {
         if (e.touches.length > 1) e.preventDefault();
       }}
-      onDoubleClick={e => e.preventDefault()}
+      onDoubleClick={(e) => e.preventDefault()}
     />
   );
 }
