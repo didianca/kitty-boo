@@ -1,5 +1,5 @@
 import React from "react";
-import { COLORS } from "./colors";
+import { COLORS } from "../utils/colors";
 
 type GameLayoutProps = {
   children: React.ReactNode;

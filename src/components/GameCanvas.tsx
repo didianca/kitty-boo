@@ -1,14 +1,14 @@
 import { useRef, useEffect } from "react";
-import { CANVAS_WIDTH, CANVAS_HEIGHT } from "./constants";
-import { draw } from "./draw";
-import { physics } from "./physics";
-import type { Item } from "./types";
+import { CANVAS_WIDTH, CANVAS_HEIGHT } from "../constants";
+import { draw } from "../utils/draw";
+import { physics } from "../physics";
+import type { Item } from "../types";
 
 type GameCanvasProps = {
-  itemsReference: React.MutableRefObject<Item[]>;
-  itemIdReference: React.MutableRefObject<number>;
+  itemsReference: React.RefObject<Item[]>;
+  itemIdReference: React.RefObject<number>;
   nextItemLevel: number;
-  aimXReference: React.MutableRefObject<number>;
+  aimXReference: React.RefObject<number>;
   gameOver: boolean;
   setScore: React.Dispatch<React.SetStateAction<number>>;
   setGameOver: React.Dispatch<React.SetStateAction<boolean>>;
@@ -29,6 +29,7 @@ export function GameCanvas({
 }: GameCanvasProps) {
   const canvasReference = useRef<HTMLCanvasElement | null>(null);
   const draggingRef = useRef(false);
+  const droppingRef = useRef(false);
 
   // Pointer aiming and dropping
   useEffect(() => {
@@ -50,30 +51,44 @@ export function GameCanvas({
     };
 
     const handlePointerUp = () => {
-      if (draggingRef.current) {
+      if (!droppingRef.current) {
         handleDrop();
-        draggingRef.current = false;
+        droppingRef.current = true;
+        setTimeout(() => {
+          droppingRef.current = false;
+        }, 100); // reset after a short delay
       }
     };
 
-    const handleClick = (event: MouseEvent) => {
-      // For desktop: update aim and drop
+    const handleClick = () => {
+      if (!droppingRef.current) {
+        handleDrop();
+        droppingRef.current = true;
+        setTimeout(() => {
+          droppingRef.current = false;
+        }, 100);
+      }
+    };
+
+    // Always update aimXReference on mouse move (even if not dragging)
+    const handleMouseMove = (event: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       aimXReference.current =
         ((event.clientX - rect.left) / rect.width) * CANVAS_WIDTH;
-      handleDrop();
     };
 
     canvas.addEventListener("pointerdown", handlePointerDown);
     canvas.addEventListener("pointermove", handlePointerMove);
     window.addEventListener("pointerup", handlePointerUp);
     canvas.addEventListener("click", handleClick);
+    canvas.addEventListener("mousemove", handleMouseMove);
 
     return () => {
       canvas.removeEventListener("pointerdown", handlePointerDown);
       canvas.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerup", handlePointerUp);
       canvas.removeEventListener("click", handleClick);
+      canvas.removeEventListener("mousemove", handleMouseMove);
     };
   }, [aimXReference, handleDrop]);
 

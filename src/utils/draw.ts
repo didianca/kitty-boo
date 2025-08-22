@@ -1,8 +1,8 @@
-import type { Item } from "./types";
-import { CANVAS_WIDTH, CANVAS_HEIGHT, ITEM_RADIUS_BY_LEVEL } from "./constants";
+import type { Item } from "../types";
+import { CANVAS_WIDTH, CANVAS_HEIGHT, ITEM_RADIUS_BY_LEVEL } from "../constants";
 import { drawItem } from "./drawItem";
 import { itemImages } from "./itemImages";
-import { COLORS } from "./colors";
+import { COLORS } from "../utils/colors";
 
 export function draw(
   context: CanvasRenderingContext2D,

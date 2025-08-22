@@ -1,6 +1,6 @@
 import type { Item } from "../types";
 import { CANVAS_HEIGHT, CONTAINER_INSET } from "../constants";
-import { playGameOverSound } from "./sounds";
+import { playGameOverSound } from "../utils/sounds";
 
 const GAME_OVER_LINE_Y = CONTAINER_INSET + (CANVAS_HEIGHT - 2 * CONTAINER_INSET) * 0.2;
 

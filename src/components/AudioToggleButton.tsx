@@ -1,5 +1,5 @@
-import soundIcon from "../public/sound.png"; // adjust path if needed
-import { COLORS } from "./colors";
+import soundIcon from "../../public/sound.png"; // adjust path if needed
+import { COLORS } from "../utils/colors";
 
 type AudioToggleButtonProps = {
   audioOn: boolean;

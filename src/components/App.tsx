@@ -1,9 +1,9 @@
-import { drop } from "./drop";
-import { physics } from "./physics";
-import { draw } from "./draw";
-import type { Item } from "./types";
-import { CANVAS_WIDTH } from "./constants";
-import { setAudioEnabled } from "./physics/sounds";
+import { drop } from "../physics/drop";
+import { physics } from "../physics";
+import { draw } from "../utils/draw";
+import type { Item } from "../types";
+import { CANVAS_WIDTH } from "../constants";
+import { setAudioEnabled } from "../utils/sounds";
 import { useRef, useState, useEffect } from "react";
 import { useCallback } from "react";
 import { GameLayout } from "./GameLayout";

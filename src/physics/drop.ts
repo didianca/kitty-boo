@@ -1,5 +1,5 @@
-import type { Item } from "./types";
-import { CANVAS_HEIGHT, CANVAS_WIDTH, CONTAINER_INSET, ITEM_RADIUS_BY_LEVEL } from "./constants";
+import type { Item } from "../types";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, CONTAINER_INSET, ITEM_RADIUS_BY_LEVEL } from "../constants";
 
 // Calculate the game over line Y (should match your draw/checkGameOver logic)
 const GAME_OVER_LINE_Y = CONTAINER_INSET + (CANVAS_HEIGHT - 2 * CONTAINER_INSET) * 0.2;

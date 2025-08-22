@@ -1,6 +1,6 @@
 import type { Item } from "../types";
 import { ITEM_RADIUS_BY_LEVEL } from "../constants";
-import { playMergeSound } from "./sounds"; // Add this import at the top
+import { playMergeSound } from "../utils/sounds"; // Add this import at the top
 
 export function mergeItems(
   items: Item[],
