@@ -8,6 +8,10 @@ type GameLayoutProps = {
   children: React.ReactNode;
 };
 
+function clamp(val: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, val));
+}
+
 export function GameLayout({ children }: GameLayoutProps) {
   const layoutRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -18,7 +22,6 @@ export function GameLayout({ children }: GameLayoutProps) {
     const handleResize = () => forceUpdate((n) => n + 1);
     window.addEventListener("resize", handleResize);
     window.addEventListener("orientationchange", handleResize);
-    // Initial update after refs are set
     handleResize();
     return () => {
       window.removeEventListener("resize", handleResize);
@@ -26,14 +29,15 @@ export function GameLayout({ children }: GameLayoutProps) {
     };
   }, []);
 
-  // Helper to calculate width with a minimum value
+  // Responsive width helpers
   const getBalloonWidth = () => {
     if (layoutRef.current && canvasRef.current) {
       const width =
         canvasRef.current.getBoundingClientRect().left -
         layoutRef.current.getBoundingClientRect().left +
         canvasRef.current.offsetWidth * 0.3;
-      return Math.max(64, width); // 64px minimum
+      // Clamp between 48px and 40vw
+      return clamp(width * 0.7, 48, window.innerWidth * 0.4);
     }
     return 64;
   };
@@ -44,21 +48,20 @@ export function GameLayout({ children }: GameLayoutProps) {
         layoutRef.current.getBoundingClientRect().right -
         canvasRef.current.getBoundingClientRect().right +
         canvasRef.current.offsetWidth * 0.3;
-      return Math.max(64, width); // 64px minimum
+      return clamp(width * 0.7, 48, window.innerWidth * 0.4);
     }
     return 64;
   };
 
-  // Helper to calculate worm width (similar to spiderweb)
   const getWormWidth = () => {
     if (layoutRef.current && canvasRef.current) {
-      const width =
-        canvasRef.current.getBoundingClientRect().left -
-        layoutRef.current.getBoundingClientRect().left +
-        canvasRef.current.offsetWidth * 0.18;
-      return Math.max(48, width); // 48px minimum
+      const layoutRect = layoutRef.current.getBoundingClientRect();
+      const canvasRect = canvasRef.current.getBoundingClientRect();
+      const available = canvasRect.left - layoutRect.left;
+      // Increase the minimum width for mobile friendliness
+      return clamp(available * 0.7, 96, window.innerWidth * 0.4); // min 96px
     }
-    return 48;
+    return 96;
   };
 
   return (

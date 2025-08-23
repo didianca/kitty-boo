@@ -1,5 +1,3 @@
-import React from "react";
-
 type BalloonImageProps = {
   getWidth: () => number;
 };
@@ -12,8 +10,8 @@ export function BalloonImage({ getWidth }: BalloonImageProps) {
         alt=""
         style={{
           position: "absolute",
-          bottom: 0,
-          left: 0,
+          bottom: 10,
+          left: 10,
           width: `${getWidth()}px`,
           height: "auto",
           opacity: 1,
