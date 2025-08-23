@@ -3,6 +3,7 @@ import { CANVAS_WIDTH, CANVAS_HEIGHT } from "../constants";
 import { draw } from "../utils/draw.util";
 import { physics } from "../physics";
 import type { Item } from "../types";
+import { COLORS } from "../maps/colors.map";
 
 type GameCanvasProps = {
   itemsReference: React.RefObject<Item[]>;
@@ -140,7 +141,7 @@ export function GameCanvas({
       width={CANVAS_WIDTH}
       height={CANVAS_HEIGHT}
       className="rounded-2xl shadow-xl border border-gray-700 touch-none select-none"
-      style={{ background: "#111827" }}
+      style={{ background: "transparent" }}
       onTouchStart={(e) => {
         if (e.touches.length > 1) e.preventDefault();
       }}

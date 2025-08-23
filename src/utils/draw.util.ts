@@ -14,8 +14,11 @@ export function draw(
 ) {
   // Sunset background
   context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-  context.fillStyle = "#F0D3A2"; // sunset
+  context.save();
+  context.globalAlpha = 0.85; // 85% opacity
+  context.fillStyle = COLORS.sunset; // or hexToRgba(COLORS.sunset, 0.85)
   context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  context.restore();
 
   // Draw all items as PNGs
   for (const item of items) {
