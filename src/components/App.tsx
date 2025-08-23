@@ -13,6 +13,7 @@ import { ResetButton } from "./ResetButton";
 import { addScoreToLeaderboard } from "../utils/leaderboard.util";
 import { Leaderboard } from "./Leaderboard";
 import { GameOverPopup } from "./GameOver";
+import { COLORS } from "../maps/colors.map";
 
 export default function App() {
   const canvasReference = useRef<HTMLCanvasElement | null>(null);
@@ -163,8 +164,8 @@ export default function App() {
         <button
           onClick={() => setShowLeaderboard(true)}
           style={{
-            background: "#FFF04C",
-            border: "2px solid #75108B",
+            background: COLORS.maize,
+            border: `2px solid ${COLORS.purple}`,
             borderRadius: "50%",
             width: 40,
             height: 40,
@@ -209,34 +210,13 @@ export default function App() {
             zIndex: 100,
           }}
           onClick={() => setShowLeaderboard(false)}
-        >
-          <div
-            style={{ position: "relative" }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Decorative PNG in leaderboard popup corner */}
-            <img
-              src="/cloud.png"
-              alt=""
-              style={{
-                position: "absolute",
-                top: 0,
-                right: 0,
-                width: 80,
-                opacity: 0.15,
-                pointerEvents: "none",
-                zIndex: 1,
-              }}
-            />
+        > <div>
             <Leaderboard />
             <button
               onClick={() => setShowLeaderboard(false)}
               style={{
-                position: "absolute",
-                top: 8,
-                right: 8,
-                background: "#FFF04C",
-                border: "2px solid #75108B",
+                background: COLORS.maize,
+                border: `2px solid ${COLORS.purple}`,
                 borderRadius: "50%",
                 width: 32,
                 height: 32,
