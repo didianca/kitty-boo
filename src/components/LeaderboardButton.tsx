@@ -24,7 +24,14 @@ export function LeaderboardButton({ onClick }: LeaderboardButtonProps) {
       }}
       aria-label="Show leaderboard"
     >
-      🏆
+      <img
+        src="../public/trophy.png"
+        alt="Leaderboard"
+        width={24}
+        height={24}
+        style={{ display: "block" }}
+        draggable={false}
+      />
     </button>
   );
 }
