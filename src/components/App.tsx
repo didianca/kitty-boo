@@ -11,9 +11,9 @@ import { AudioToggleButton } from "./AudioToggleButton";
 import { GameCanvas } from "./GameCanvas";
 import { ResetButton } from "./ResetButton";
 import { addScoreToLeaderboard } from "../utils/leaderboard.util";
-import { Leaderboard } from "./Leaderboard";
 import { GameOverPopup } from "./GameOver";
-import { COLORS } from "../maps/colors.map";
+import { LeaderboardButton } from "./LeaderboardButton";
+import { LeaderboardPopup } from "./LeaderboardPopup";
 
 export default function App() {
   const canvasReference = useRef<HTMLCanvasElement | null>(null);
@@ -161,26 +161,7 @@ export default function App() {
         }}
       >
         <AudioToggleButton audioOn={audioOn} setAudioOn={setAudioOn} />
-        <button
-          onClick={() => setShowLeaderboard(true)}
-          style={{
-            background: COLORS.maize,
-            border: `2px solid ${COLORS.purple}`,
-            borderRadius: "50%",
-            width: 40,
-            height: 40,
-            fontSize: 20,
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: 0,
-            margin: 0, // ensure no default margin
-          }}
-          aria-label="Show leaderboard"
-        >
-          🏆
-        </button>
+        <LeaderboardButton onClick={() => setShowLeaderboard(true)} />
       </div>
       <GameCanvas
         itemsReference={itemsReference}
@@ -196,40 +177,7 @@ export default function App() {
       />
       <ResetButton onClick={resetGame} />
       {showLeaderboard && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100vh",
-            background: "rgba(0,0,0,0.4)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 100,
-          }}
-          onClick={() => setShowLeaderboard(false)}
-        > <div>
-            <Leaderboard />
-            <button
-              onClick={() => setShowLeaderboard(false)}
-              style={{
-                background: COLORS.maize,
-                border: `2px solid ${COLORS.purple}`,
-                borderRadius: "50%",
-                width: 32,
-                height: 32,
-                fontSize: 18,
-                cursor: "pointer",
-                zIndex: 2,
-              }}
-              aria-label="Close leaderboard"
-            >
-              ✕
-            </button>
-          </div>
-        </div>
+        <LeaderboardPopup onClose={() => setShowLeaderboard(false)} />
       )}
       {gameOver && (
         <GameOverPopup
