@@ -31,7 +31,7 @@ export function GameLayout({ children }: GameLayoutProps) {
     >
       {/* Decorative PNGs in corners */}
       <img
-        src="/baloon.png"
+        src="/baloons.png"
         alt=""
         style={{
           position: "absolute",
