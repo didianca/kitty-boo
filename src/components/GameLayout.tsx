@@ -1,5 +1,8 @@
 import React, { useRef, useLayoutEffect, useState } from "react";
 import { COLORS } from "../maps/colors.map";
+import { BalloonImage } from "./BalloonImage";
+import { SpiderwebImage } from "./SpiderwebImage";
+import { WormImage } from "./WormImage";
 
 type GameLayoutProps = {
   children: React.ReactNode;
@@ -46,6 +49,18 @@ export function GameLayout({ children }: GameLayoutProps) {
     return 64;
   };
 
+  // Helper to calculate worm width (similar to spiderweb)
+  const getWormWidth = () => {
+    if (layoutRef.current && canvasRef.current) {
+      const width =
+        canvasRef.current.getBoundingClientRect().left -
+        layoutRef.current.getBoundingClientRect().left +
+        canvasRef.current.offsetWidth * 0.18;
+      return Math.max(48, width); // 48px minimum
+    }
+    return 48;
+  };
+
   return (
     <div
       ref={layoutRef}
@@ -61,46 +76,9 @@ export function GameLayout({ children }: GameLayoutProps) {
       }}
     >
       {/* Decorative PNGs in corners */}
-      <img
-        src="/baloons.png"
-        alt=""
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          width: `${getBalloonWidth()}px`,
-          height: "auto",
-          opacity: 1,
-          pointerEvents: "none",
-          zIndex: 1,
-          transition: "width 0.2s",
-          animation: "balloon-float 2.8s ease-in-out infinite",
-        }}
-      />
-      <style>
-        {`
-        @keyframes balloon-float {
-          0% { transform: translateY(0); }
-          50% { transform: translateY(-18px); }
-          100% { transform: translateY(0); }
-        }
-        `}
-      </style>
-      <img
-        src="/spiderweb.png"
-        alt=""
-        style={{
-          position: "absolute",
-          top: 0,
-          right: 0,
-          width: `${getSpiderwebWidth()}px`,
-          height: "auto",
-          opacity: 1,
-          pointerEvents: "none",
-          zIndex: 1,
-          transition: "width 0.2s",
-        }}
-      />
+      <BalloonImage getWidth={getBalloonWidth} />
+      <SpiderwebImage getWidth={getSpiderwebWidth} />
+      <WormImage getWidth={getWormWidth} />
       <div
         ref={canvasRef}
         className="flex flex-col gap-3 items-center relative"
