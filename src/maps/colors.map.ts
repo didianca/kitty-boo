@@ -10,4 +10,5 @@ export const COLORS = {
   licorice: "#110015",
   yellowGreen: "#B8D14B",
   sunset: "#F0D3A2",
+  gray700: "#374151", // Tailwind's gray-700
 };

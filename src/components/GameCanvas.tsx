@@ -140,8 +140,11 @@ export function GameCanvas({
       ref={canvasReference}
       width={CANVAS_WIDTH}
       height={CANVAS_HEIGHT}
-      className="rounded-2xl shadow-xl border border-gray-700 touch-none select-none"
-      style={{ background: "transparent" }}
+      className="rounded-2xl shadow-xl touch-none select-none"
+      style={{
+        background: "transparent",
+        border: `1px solid ${COLORS.gray700}`,
+      }}
       onTouchStart={(e) => {
         if (e.touches.length > 1) e.preventDefault();
       }}
