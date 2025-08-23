@@ -3,7 +3,7 @@ export const ITEM_IMAGE_MAP = [
   "/items/candy-corn.png",      // level 1
   "/items/spider.png",     // level 2
   "/items/cat.png",        // level 3
-  "/items/hay-roll.png",  // level 4
+  "/items/hay-bale.png",  // level 4
   "/items/cauldron.png",   // level 5
   "/items/pumpkin.png",    // level 6
   "/items/potion.png",  // level 7

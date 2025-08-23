@@ -88,23 +88,4 @@ Start the dev server:
 pnpm dev
 ```
 
-
-
-## Credits
-Game icons made by the following authors from [www.flaticon.com](https://www.flaticon.com/):
-
-- https://www.flaticon.com/authors/tulpahn
-- https://www.flaticon.com/authors/freepik
-- https://www.flaticon.com/authors/mikan933
-- https://www.flaticon.com/authors/designbydai
-- https://www.flaticon.com/authors/kornkun
-- https://www.flaticon.com/authors/vectorsmarket15
-- https://www.flaticon.com/authors/smashicons
-- https://www.flaticon.com/authors/ina-mella
-- https://www.flaticon.com/authors/lumi
-- https://www.flaticon.com/authors/park-jisun
-- https://www.flaticon.com/authors/flat-icons
-
-> Individual icon licenses can be found in the `/public/icon-license` folder.
-
 Color palette : https://coolors.co/palette/ffffff-fff04c-ffc545-ff9b3e-ff7037-d15053-a3306f-75108b-110015-b8d14b
