@@ -88,4 +88,63 @@ Start the dev server:
 pnpm dev
 ```
 
-Color palette : https://coolors.co/palette/ffffff-fff04c-ffc545-ff9b3e-ff7037-d15053-a3306f-75108b-110015-b8d14b
+---
+
+## Color Palette
+
+https://coolors.co/palette/ffffff-fff04c-ffc545-ff9b3e-ff7037-d15053-a3306f-75108b-110015-b8d14b
+
+---
+
+## How to Make Changes and Test in Android Studio
+
+### 1. Make Changes
+
+Edit your React app source code as usual in VS Code (or your preferred editor).
+
+---
+
+### 2. Build Your React App
+
+Open a terminal in your project root and run:
+
+```sh
+pnpm build
+```
+
+This will generate a new production build in the `build/` folder.
+
+---
+
+### 3. Copy the Build to Android
+
+Still in your project root, run:
+
+```sh
+npx cap copy
+```
+
+This copies your latest web build into the Android project.
+
+---
+
+### 4. Test in Android Studio
+
+1. Open the `android` folder in Android Studio (or use `npx cap open android`).
+2. Make sure your emulator or device is running and selected.
+3. Click the **Run** (▶️) button in Android Studio to build and launch your app on the emulator/device.
+
+---
+
+### 5. Repeat
+
+For each new change:
+- Edit your code
+- Run `pnpm build`
+- Run `npx cap copy`
+- Click **Run** in Android Studio
+
+---
+
+**Tip:**  
+You do not need to re-add the Android platform or re-initialize Capacitor for each change—just repeat the steps above.

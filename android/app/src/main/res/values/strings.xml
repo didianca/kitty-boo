@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">kitty-boo</string>
+    <string name="title_activity_main">kitty-boo</string>
+    <string name="package_name">io.kittyboo.app</string>
+    <string name="custom_url_scheme">io.kittyboo.app</string>
+</resources>
