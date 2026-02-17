@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+  # Ensure the workflow can push to the repo (gh-pages branch)
+permissions:
+  contents: write
+  pages: write
 
 jobs:
   build-and-deploy:
