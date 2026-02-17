@@ -33,7 +33,10 @@ If you fork this repo and want to run it locally:
 
 4. Open the URL shown in the terminal (usually `http://localhost:5173`).
 
-## Screenshots
+## Credits
+
+- **Color palette:** [Coolors](https://coolors.co/palette/ffffff-fff04c-ffc545-ff9b3e-ff7037-d15053-a3306f-75108b-110015-b8d14b)
+
+## Gameplay
 
 ![Gameplay](resources/gameplay_image1.png)
-![Gameplay](resources/gameplay_image2.png)
