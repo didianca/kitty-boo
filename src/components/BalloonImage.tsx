@@ -8,6 +8,8 @@ export function BalloonImage({ getWidth }: BalloonImageProps) {
   return (
     <>
       <img
+        id="balloon-image"
+        className="balloon-image"
         src={`${BASE_URL}baloons.png`}
         alt=""
         style={{

@@ -5,6 +5,8 @@ export function Leaderboard() {
   const leaderboard = getLeaderboard();
   return (
     <div
+      id="leaderboard"
+      className="leaderboard"
       style={{
         background: COLORS.maize,
         color: COLORS.purple,
@@ -19,6 +21,8 @@ export function Leaderboard() {
       }}
     >
       <h2
+        id="leaderboard-title"
+        className="leaderboard-title"
         style={{
           margin: 0,
           fontSize: 22,
@@ -31,7 +35,7 @@ export function Leaderboard() {
       >
         Leaderboard
       </h2>
-      <ol style={{ paddingLeft: 20, margin: 0, marginTop: 10 }}>
+      <ol id="leaderboard-list" className="leaderboard-list" style={{ paddingLeft: 20, margin: 0, marginTop: 10 }}>
         {leaderboard.map((entry, i) => {
           const dateObj = new Date(entry.date);
           const dateStr = dateObj.toLocaleDateString();

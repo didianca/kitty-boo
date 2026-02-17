@@ -67,6 +67,8 @@ export function GameLayout({ children }: GameLayoutProps) {
 
   return (
     <div
+      id="game-layout"
+      className="game-layout"
       ref={layoutRef}
       style={{
         minHeight: "100vh",
@@ -84,9 +86,16 @@ export function GameLayout({ children }: GameLayoutProps) {
       <SpiderwebImage getWidth={getSpiderwebWidth} />
       <WormImage getWidth={getWormWidth} />
       <div
+        id="game-layout-content"
         ref={canvasRef}
-        className="flex flex-col gap-3 items-center relative"
-        style={{ zIndex: 2 }}
+        className="game-layout-content flex flex-col items-center relative"
+        style={{
+          zIndex: 2,
+          height: "min(100vh, 100dvh)",
+          minHeight: 0,
+          width: "100%",
+          maxWidth: 420,
+        }}
       >
         {children}
       </div>

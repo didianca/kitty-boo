@@ -8,6 +8,8 @@ type LeaderboardPopupProps = {
 export function LeaderboardPopup({ onClose }: LeaderboardPopupProps) {
   return (
     <div
+      id="leaderboard-overlay"
+      className="leaderboard-overlay"
       style={{
         position: "fixed",
         top: 0,
@@ -23,6 +25,8 @@ export function LeaderboardPopup({ onClose }: LeaderboardPopupProps) {
       onClick={onClose}
     >
       <div
+        id="leaderboard-popup"
+        className="leaderboard-popup"
         style={{
           position: "relative",
           minWidth: 320,
@@ -38,6 +42,8 @@ export function LeaderboardPopup({ onClose }: LeaderboardPopupProps) {
       >
         <Leaderboard />
         <button
+          id="leaderboard-close"
+          className="leaderboard-close"
           onClick={onClose}
           style={{
             position: "absolute",

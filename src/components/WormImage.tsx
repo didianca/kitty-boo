@@ -23,6 +23,8 @@ export function WormImage({ getWidth }: WormImageProps) {
   return (
     <>
       <img
+        id="worm-image"
+        className="worm-image"
         src={src}
         alt=""
         style={{

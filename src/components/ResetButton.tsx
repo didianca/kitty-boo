@@ -7,6 +7,8 @@ type ResetButtonProps = {
 export function ResetButton({ onClick }: ResetButtonProps) {
   return (
     <button
+      id="reset-button"
+      className="reset-button"
       onClick={onClick}
       style={{
         marginTop: 16,

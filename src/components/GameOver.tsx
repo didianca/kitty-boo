@@ -12,6 +12,8 @@ export function GameOverPopup({ score, onReset }: GameOverPopupProps) {
 
   return (
     <div
+      id="game-over-overlay"
+      className="game-over-overlay"
       style={{
         position: "fixed",
         top: 0,
@@ -26,6 +28,8 @@ export function GameOverPopup({ score, onReset }: GameOverPopupProps) {
       }}
     >
       <div
+        id="game-over-popup"
+        className="game-over-popup"
         style={{
           background: COLORS.maize,
           border: `3px solid ${COLORS.purple}`,
@@ -37,7 +41,7 @@ export function GameOverPopup({ score, onReset }: GameOverPopupProps) {
           position: "relative",
         }}
       >
-        <h2 style={{ color: COLORS.purple, fontSize: 28, margin: 0, fontWeight: "bold" }}>
+        <h2 id="game-over-title" className="game-over-title" style={{ color: COLORS.purple, fontSize: 28, margin: 0, fontWeight: "bold" }}>
           Game Over!
         </h2>
         <div style={{ margin: "24px 0 12px 0", fontSize: 22, color: COLORS.purple }}>
@@ -53,6 +57,8 @@ export function GameOverPopup({ score, onReset }: GameOverPopupProps) {
           )}
         </div>
         <button
+          id="game-over-play-again"
+          className="game-over-play-again"
           onClick={onReset}
           style={{
             marginTop: 28,

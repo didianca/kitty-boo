@@ -138,9 +138,10 @@ export function GameCanvas({
   return (
     <canvas
       ref={canvasReference}
+      id="game-canvas"
+      className="game-canvas rounded-2xl shadow-xl touch-none select-none"
       width={CANVAS_WIDTH}
       height={CANVAS_HEIGHT}
-      className="rounded-2xl shadow-xl touch-none select-none"
       style={{
         background: "transparent",
         border: `1px solid ${COLORS.gray700}`,

@@ -11,6 +11,8 @@ export function AudioToggleButton({ audioOn, setAudioOn }: AudioToggleButtonProp
 
   return (
     <button
+      id="audio-toggle"
+      className="audio-toggle-button"
       onClick={toggleMute}
       style={{
         width: "clamp(32px, 8vw, 40px)",

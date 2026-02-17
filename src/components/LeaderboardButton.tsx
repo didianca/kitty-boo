@@ -9,6 +9,8 @@ type LeaderboardButtonProps = {
 export function LeaderboardButton({ onClick }: LeaderboardButtonProps) {
   return (
     <button
+      id="leaderboard-button"
+      className="leaderboard-button"
       onClick={onClick}
       style={{
         background: COLORS.maize,

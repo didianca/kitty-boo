@@ -7,6 +7,8 @@ type SpiderwebImageProps = {
 export function SpiderwebImage({ getWidth }: SpiderwebImageProps) {
   return (
     <img
+      id="spiderweb-image"
+      className="spiderweb-image"
       src={`${BASE_URL}spiderweb.png`}
       alt=""
       style={{

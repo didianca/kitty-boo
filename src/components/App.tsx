@@ -14,6 +14,7 @@ import { addScoreToLeaderboard } from "../utils/leaderboard.util";
 import { GameOverPopup } from "./GameOver";
 import { LeaderboardButton } from "./LeaderboardButton";
 import { LeaderboardPopup } from "./LeaderboardPopup";
+import { GameTitle } from "./GameTitle";
 
 export default function App() {
   const canvasReference = useRef<HTMLCanvasElement | null>(null);
@@ -253,33 +254,83 @@ export default function App() {
   return (
     <GameLayout>
       <div
+        className="app-content"
         style={{
-          position: "absolute",
-          top: "clamp(8px, 2vw, 16px)",
-          right: "clamp(8px, 2vw, 16px)",
           display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          gap: "clamp(8px, 2vw, 20px)",
-          zIndex: 20,
+          flexDirection: "column",
+          flex: 1,
+          minHeight: 0,
+          width: "100%",
         }}
       >
-        <AudioToggleButton audioOn={audioOn} setAudioOn={setAudioOn} />
-        <LeaderboardButton onClick={() => setShowLeaderboard(true)} />
+        <div
+          className="app-title-section"
+          style={{
+            flex: "2.5 2.5 0",
+            minHeight: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "relative",
+            zIndex: 10,
+            marginBottom: "-3.2vh",
+            pointerEvents: "none",
+          }}
+        >
+          <GameTitle />
+        </div>
+        <div
+          className="app-canvas-section"
+          style={{
+            flex: "7.5 7.5 0",
+            minHeight: 0,
+            position: "relative",
+            zIndex: 1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 12,
+          }}
+        >
+          <div
+            className="app-canvas-wrapper"
+            style={{
+              position: "relative",
+              width: CANVAS_WIDTH,
+            }}
+          >
+            <div
+              className="app-toolbar"
+              style={{
+                position: "absolute",
+                top: "clamp(8px, 2vw, 16px)",
+                right: "clamp(8px, 2vw, 16px)",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: "clamp(8px, 2vw, 20px)",
+                zIndex: 20,
+              }}
+            >
+              <AudioToggleButton audioOn={audioOn} setAudioOn={setAudioOn} />
+              <LeaderboardButton onClick={() => setShowLeaderboard(true)} />
+            </div>
+            <GameCanvas
+            itemsReference={itemsReference}
+            itemIdReference={itemIdReference}
+            nextItemLevel={nextItemLevel}
+            aimXReference={aimXReference}
+            gameOver={gameOver}
+            setScore={setScore}
+            setGameOver={setGameOver}
+            score={score}
+              handleDrop={handleDrop}
+              leaderboardOpen={showLeaderboard}
+            />
+          </div>
+          <ResetButton onClick={resetGame} />
+        </div>
       </div>
-      <GameCanvas
-        itemsReference={itemsReference}
-        itemIdReference={itemIdReference}
-        nextItemLevel={nextItemLevel}
-        aimXReference={aimXReference}
-        gameOver={gameOver}
-        setScore={setScore}
-        setGameOver={setGameOver}
-        score={score}
-        handleDrop={handleDrop}
-        leaderboardOpen={showLeaderboard}
-      />
-      <ResetButton onClick={resetGame} />
       {showLeaderboard && (
         <LeaderboardPopup onClose={() => setShowLeaderboard(false)} />
       )}
