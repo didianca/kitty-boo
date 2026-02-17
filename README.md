@@ -39,4 +39,5 @@ If you fork this repo and want to run it locally:
 
 ## Gameplay
 
-![Gameplay](resources/gameplay_image1.png)
+![Gameplay](resources/featured_img.png)
+

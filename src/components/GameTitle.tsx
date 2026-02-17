@@ -26,7 +26,7 @@ export function GameTitle() {
       >
         <img
           className="game-title-img"
-          src={`${BASE_URL}resources/game_title.png`}
+          src={`${BASE_URL}game_title.png`}
           alt="Kitty Boo"
           style={{
             maxHeight: "100%",
