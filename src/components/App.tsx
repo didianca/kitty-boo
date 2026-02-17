@@ -2,7 +2,7 @@ import { drop, getDropCooldownMs } from "../physics/drop";
 import { physics } from "../physics";
 import { draw } from "../utils/draw.util";
 import type { Item } from "../types";
-import { CANVAS_WIDTH, ITEM_RADIUS_BY_LEVEL, CONTAINER_INSET } from "../constants";
+import { CANVAS_WIDTH, CANVAS_HEIGHT, ITEM_RADIUS_BY_LEVEL, CONTAINER_INSET } from "../constants";
 import { setAudioEnabled } from "../utils/sounds.util";
 import { useRef, useState, useEffect } from "react";
 import { useCallback } from "react";
@@ -23,7 +23,8 @@ export default function App() {
   const itemIdReference = useRef(1);
   const dropCooldownTimeRef = useRef<number>(0); // Track when next drop is allowed (in ms)
   const keyHoldRef = useRef(false); // whether space/arrow is currently held
-  const dropRepeatTimerRef = useRef<number | null>(null);
+  const dropPollIntervalRef = useRef<number | null>(null);
+  const handleDropRef = useRef<() => void>(() => {});
   const leftHoldRef = useRef(false);
   const rightHoldRef = useRef(false);
   const moveIntervalRef = useRef<number | null>(null);
@@ -36,7 +37,7 @@ export default function App() {
   const [showLeaderboard, setShowLeaderboard] = useState(false);
 
   // Handle dropping a new item with cooldown enforcement
-  const handleDrop = useCallback(
+  const handleDropImpl = useCallback(
     () => {
       const now = Date.now();
       
@@ -62,24 +63,40 @@ export default function App() {
       const cooldownMs = getDropCooldownMs(itemRadius);
       dropCooldownTimeRef.current = now + cooldownMs;
 
-      // Clear any existing repeat timer
-      if (dropRepeatTimerRef.current) {
-        window.clearTimeout(dropRepeatTimerRef.current);
-        dropRepeatTimerRef.current = null;
-      }
-
-      // If the user is holding the key, schedule the next drop after cooldown
+      // If the user is holding the key, ensure the poll interval is running
       if (keyHoldRef.current) {
-        dropRepeatTimerRef.current = window.setTimeout(() => {
-          dropRepeatTimerRef.current = null;
-          if (keyHoldRef.current) {
-            handleDrop();
-          }
-        }, Math.max(0, cooldownMs));
+        startDropPollInterval();
       }
     },
     [nextItemLevel, gameOver]
   );
+
+  handleDropRef.current = handleDropImpl;
+  const handleDrop = handleDropImpl;
+
+  const startDropPollInterval = useCallback(() => {
+    if (dropPollIntervalRef.current) return; // Already running
+    const POLL_MS = 50;
+    dropPollIntervalRef.current = window.setInterval(() => {
+      if (!keyHoldRef.current) {
+        if (dropPollIntervalRef.current) {
+          window.clearInterval(dropPollIntervalRef.current);
+          dropPollIntervalRef.current = null;
+        }
+        return;
+      }
+      if (Date.now() >= dropCooldownTimeRef.current) {
+        handleDropRef.current();
+      }
+    }, POLL_MS) as unknown as number;
+  }, []);
+
+  const stopDropPollInterval = useCallback(() => {
+    if (dropPollIntervalRef.current) {
+      window.clearInterval(dropPollIntervalRef.current);
+      dropPollIntervalRef.current = null;
+    }
+  }, []);
 
   // Pointer aiming and dropping
   useEffect(() => {
@@ -187,9 +204,15 @@ export default function App() {
         rightHoldRef.current = true;
       }
 
-      // Trigger drop on first keydown (ignore repeats while holding)
-      if ((isSpace || isArrowDown) && !event.repeat && !gameOver) {
-        handleDrop();
+      // Trigger drop on keydown; on repeat, restart poll if chain was broken (e.g. spurious keyup)
+      if ((isSpace || isArrowDown) && !gameOver) {
+        if (!event.repeat) {
+          handleDrop();
+        } else if (!dropPollIntervalRef.current && keyHoldRef.current) {
+          // Repeat keydown but no poll running - restart (recover from spurious keyup)
+          handleDrop();
+          startDropPollInterval();
+        }
       }
 
       // Start move interval if needed
@@ -216,10 +239,7 @@ export default function App() {
       const isArrowRight = event.key === "ArrowRight" || event.code === "ArrowRight";
       if (isSpace || isArrowDown) {
         keyHoldRef.current = false;
-        if (dropRepeatTimerRef.current) {
-          window.clearTimeout(dropRepeatTimerRef.current);
-          dropRepeatTimerRef.current = null;
-        }
+        stopDropPollInterval();
       }
       if (isArrowLeft) leftHoldRef.current = false;
       if (isArrowRight) rightHoldRef.current = false;
@@ -231,13 +251,27 @@ export default function App() {
       }
     };
 
+    const handleBlur = () => {
+      keyHoldRef.current = false;
+      stopDropPollInterval();
+    };
+
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
+    window.addEventListener("blur", handleBlur);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
+      window.removeEventListener("blur", handleBlur);
     };
-  }, [gameOver, handleDrop, resetGame]);
+  }, [gameOver, handleDrop, resetGame, startDropPollInterval, stopDropPollInterval]);
+
+  // Stop drop poll when game over
+  useEffect(() => {
+    if (gameOver) {
+      stopDropPollInterval();
+    }
+  }, [gameOver, stopDropPollInterval]);
 
   // Audio toggle effect
   useEffect(() => {
@@ -283,7 +317,7 @@ export default function App() {
           className="app-canvas-section"
           style={{
             flex: "7.5 7.5 0",
-            minHeight: 0,
+            minHeight: CANVAS_HEIGHT + 80,
             position: "relative",
             zIndex: 1,
             display: "flex",

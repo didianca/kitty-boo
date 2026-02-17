@@ -75,10 +75,11 @@ export function GameLayout({ children }: GameLayoutProps) {
         minWidth: "100vw",
         background: `radial-gradient(ellipse at 60% 20%, ${COLORS.yellowGreen} 0%, ${COLORS.princetonOrange} 40%, ${COLORS.purple} 100%)`,
         display: "flex",
-        alignItems: "center",
+        alignItems: "flex-start",
         justifyContent: "center",
         position: "relative",
-        overflow: "hidden",
+        overflowY: "auto",
+        overflowX: "hidden",
       }}
     >
       {/* Decorative PNGs in corners */}
@@ -91,10 +92,11 @@ export function GameLayout({ children }: GameLayoutProps) {
         className="game-layout-content flex flex-col items-center relative"
         style={{
           zIndex: 2,
-          height: "min(100vh, 100dvh)",
-          minHeight: 0,
+          minHeight: "min(100vh, 100dvh)",
           width: "100%",
           maxWidth: 420,
+          flexShrink: 0,
+          padding: "min(2vh, 16px) 0",
         }}
       >
         {children}
