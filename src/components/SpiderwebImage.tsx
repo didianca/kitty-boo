@@ -1,3 +1,5 @@
+const BASE_URL = import.meta.env.BASE_URL;
+
 type SpiderwebImageProps = {
   getWidth: () => number;
 };
@@ -5,7 +7,7 @@ type SpiderwebImageProps = {
 export function SpiderwebImage({ getWidth }: SpiderwebImageProps) {
   return (
     <img
-      src="/spiderweb.png"
+      src={`${BASE_URL}spiderweb.png`}
       alt=""
       style={{
         position: "absolute",

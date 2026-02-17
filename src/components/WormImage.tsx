@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+const BASE_URL = import.meta.env.BASE_URL;
+
 type WormImageProps = {
   getWidth: () => number;
 };
@@ -14,7 +16,7 @@ export function WormImage({ getWidth }: WormImageProps) {
     return () => clearInterval(interval);
   }, []);
 
-  const src = frame === 0 ? "/worm.png" : "/worm1.png";
+  const src = frame === 0 ? `${BASE_URL}worm.png` : `${BASE_URL}worm1.png`;
   const isShaking = frame === 1;
 
   // 0.4s for shake, 3s for pause = 3.4s total

@@ -1,4 +1,6 @@
+const BASE_URL = import.meta.env.BASE_URL;
+
 export const ICONS = {
-  sound: "/sound.png", // or your actual path
-  mute: "/mute.png",   // if you have a mute icon
+  sound: `${BASE_URL}sound.png`,
+  mute: `${BASE_URL}mute.png`,
 };

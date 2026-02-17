@@ -1,3 +1,5 @@
+const BASE_URL = import.meta.env.BASE_URL;
+
 type BalloonImageProps = {
   getWidth: () => number;
 };
@@ -6,7 +8,7 @@ export function BalloonImage({ getWidth }: BalloonImageProps) {
   return (
     <>
       <img
-        src="/baloons.png"
+        src={`${BASE_URL}baloons.png`}
         alt=""
         style={{
           position: "absolute",

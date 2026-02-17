@@ -1,5 +1,7 @@
 import { COLORS } from "../maps/colors.map";
 
+const BASE_URL = import.meta.env.BASE_URL;
+
 type LeaderboardButtonProps = {
   onClick: () => void;
 };
@@ -25,9 +27,13 @@ export function LeaderboardButton({ onClick }: LeaderboardButtonProps) {
       aria-label="Show leaderboard"
     >
       <img
-        src="../public/trophy.png"
+        src={`${BASE_URL}trophy.png`}
         alt="Leaderboard"
-        style={{ display: "block", width: "clamp(19px, 1.9vw, 24px)", height: "clamp(19px, 1.9vw, 24px)" }}
+        style={{
+          display: "block",
+          width: "clamp(19px, 1.9vw, 24px)",
+          height: "clamp(19px, 1.9vw, 24px)",
+        }}
         draggable={false}
       />
     </button>
