@@ -12,9 +12,9 @@ export function LeaderboardButton({ onClick }: LeaderboardButtonProps) {
         background: COLORS.maize,
         border: `2px solid ${COLORS.purple}`,
         borderRadius: "50%",
-        width: 40,
-        height: 40,
-        fontSize: 20,
+        width: "clamp(32px, 8vw, 40px)",
+        height: "clamp(32px, 8vw, 40px)",
+        fontSize: "clamp(16px, 2vw, 20px)",
         cursor: "pointer",
         display: "flex",
         alignItems: "center",
@@ -27,9 +27,7 @@ export function LeaderboardButton({ onClick }: LeaderboardButtonProps) {
       <img
         src="../public/trophy.png"
         alt="Leaderboard"
-        width={24}
-        height={24}
-        style={{ display: "block" }}
+        style={{ display: "block", width: "clamp(19px, 1.9vw, 24px)", height: "clamp(19px, 1.9vw, 24px)" }}
         draggable={false}
       />
     </button>

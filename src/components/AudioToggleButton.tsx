@@ -13,8 +13,8 @@ export function AudioToggleButton({ audioOn, setAudioOn }: AudioToggleButtonProp
     <button
       onClick={toggleMute}
       style={{
-        width: 40,
-        height: 40,
+        width: "clamp(32px, 8vw, 40px)",
+        height: "clamp(32px, 8vw, 40px)",
         borderRadius: "50%",
         border: `2px solid ${COLORS.purple}`,
         background: COLORS.maize,
@@ -25,16 +25,14 @@ export function AudioToggleButton({ audioOn, setAudioOn }: AudioToggleButtonProp
         cursor: "pointer",
         position: "relative",
         overflow: "hidden",
-        fontSize: 20, // match leaderboard button
+        fontSize: "clamp(16px, 2vw, 20px)",
       }}
       aria-label={audioOn ? "Mute audio" : "Unmute audio"}
     >
       <img
         src={ICONS.sound}
         alt={audioOn ? "Sound on" : "Sound off"}
-        width={20}
-        height={20}
-        style={{ display: "block" }}
+        style={{ display: "block", width: "clamp(16px, 1.6vw, 20px)", height: "clamp(16px, 1.6vw, 20px)" }}
         draggable={false}
       />
       {/* Mute bar overlay */}

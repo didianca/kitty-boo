@@ -1,8 +1,8 @@
-import { drop } from "../physics/drop";
+import { drop, getDropCooldownMs } from "../physics/drop";
 import { physics } from "../physics";
 import { draw } from "../utils/draw.util";
 import type { Item } from "../types";
-import { CANVAS_WIDTH } from "../constants";
+import { CANVAS_WIDTH, ITEM_RADIUS_BY_LEVEL, CONTAINER_INSET } from "../constants";
 import { setAudioEnabled } from "../utils/sounds.util";
 import { useRef, useState, useEffect } from "react";
 import { useCallback } from "react";
@@ -20,6 +20,12 @@ export default function App() {
   const animationFrameReference = useRef<number | null>(null);
   const itemsReference = useRef<Item[]>([]);
   const itemIdReference = useRef(1);
+  const dropCooldownTimeRef = useRef<number>(0); // Track when next drop is allowed (in ms)
+  const keyHoldRef = useRef(false); // whether space/arrow is currently held
+  const dropRepeatTimerRef = useRef<number | null>(null);
+  const leftHoldRef = useRef(false);
+  const rightHoldRef = useRef(false);
+  const moveIntervalRef = useRef<number | null>(null);
   const [score, setScore] = useState(0);
   const [nextItemLevel, setNextItemLevel] = useState(0);
   const [gameOver, setGameOver] = useState(false);
@@ -28,9 +34,20 @@ export default function App() {
   const [dragging, setDragging] = useState(false);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
 
-  // Handle dropping a new item
+  // Handle dropping a new item with cooldown enforcement
   const handleDrop = useCallback(
-    () =>
+    () => {
+      const now = Date.now();
+      
+      // Check if we're still in cooldown
+      if (now < dropCooldownTimeRef.current) {
+        return; // Still in cooldown, don't drop
+      }
+      
+      // Get the radius of the item we're about to drop
+      const itemRadius = ITEM_RADIUS_BY_LEVEL[Math.min(nextItemLevel, ITEM_RADIUS_BY_LEVEL.length - 1)];
+      
+      // Perform the drop
       drop(
         itemsReference,
         itemIdReference,
@@ -38,7 +55,28 @@ export default function App() {
         setNextItemLevel,
         aimXReference,
         gameOver
-      ),
+      );
+      
+      // Set the cooldown timer based on this item's travel time
+      const cooldownMs = getDropCooldownMs(itemRadius);
+      dropCooldownTimeRef.current = now + cooldownMs;
+
+      // Clear any existing repeat timer
+      if (dropRepeatTimerRef.current) {
+        window.clearTimeout(dropRepeatTimerRef.current);
+        dropRepeatTimerRef.current = null;
+      }
+
+      // If the user is holding the key, schedule the next drop after cooldown
+      if (keyHoldRef.current) {
+        dropRepeatTimerRef.current = window.setTimeout(() => {
+          dropRepeatTimerRef.current = null;
+          if (keyHoldRef.current) {
+            handleDrop();
+          }
+        }, Math.max(0, cooldownMs));
+      }
+    },
     [nextItemLevel, gameOver]
   );
 
@@ -120,18 +158,84 @@ export default function App() {
     };
   }, [gameOver, nextItemLevel, score]);
 
-  // Keyboard reset
+  // Keyboard: reset on keydown for 'r', trigger drops on first keydown for Space/ArrowDown
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      const isSpace = event.code === "Space" || event.key === " " || event.key === "Spacebar";
+      const isArrowDown = event.key === "ArrowDown" || event.code === "ArrowDown";
+      const isArrowLeft = event.key === "ArrowLeft" || event.code === "ArrowLeft";
+      const isArrowRight = event.key === "ArrowRight" || event.code === "ArrowRight";
+
+      // Prevent page scroll on Space and Arrow keys
+      if (isSpace || isArrowDown || isArrowLeft || isArrowRight) event.preventDefault();
+
       if (event.key === "r" || event.key === "R") {
         resetGame();
       }
-      if ((event.key === " " || event.key === "ArrowDown") && !gameOver) {
+
+      // Mark key as held for repeat scheduling
+      if (isSpace || isArrowDown) {
+        keyHoldRef.current = true;
+      }
+
+      // Movement holds
+      if (isArrowLeft) {
+        leftHoldRef.current = true;
+      }
+      if (isArrowRight) {
+        rightHoldRef.current = true;
+      }
+
+      // Trigger drop on first keydown (ignore repeats while holding)
+      if ((isSpace || isArrowDown) && !event.repeat && !gameOver) {
         handleDrop();
       }
+
+      // Start move interval if needed
+      if ((leftHoldRef.current || rightHoldRef.current) && moveIntervalRef.current == null) {
+        moveIntervalRef.current = window.setInterval(() => {
+          const speed = 4; // pixels per tick
+          let delta = 0;
+          if (leftHoldRef.current) delta -= speed;
+          if (rightHoldRef.current) delta += speed;
+          if (delta !== 0) {
+            aimXReference.current = Math.max(
+              CONTAINER_INSET,
+              Math.min(CANVAS_WIDTH - CONTAINER_INSET, aimXReference.current + delta)
+            );
+          }
+        }, 16) as unknown as number;
+      }
     };
+
+    const handleKeyUp = (event: KeyboardEvent) => {
+      const isSpace = event.code === "Space" || event.key === " " || event.key === "Spacebar";
+      const isArrowDown = event.key === "ArrowDown" || event.code === "ArrowDown";
+      const isArrowLeft = event.key === "ArrowLeft" || event.code === "ArrowLeft";
+      const isArrowRight = event.key === "ArrowRight" || event.code === "ArrowRight";
+      if (isSpace || isArrowDown) {
+        keyHoldRef.current = false;
+        if (dropRepeatTimerRef.current) {
+          window.clearTimeout(dropRepeatTimerRef.current);
+          dropRepeatTimerRef.current = null;
+        }
+      }
+      if (isArrowLeft) leftHoldRef.current = false;
+      if (isArrowRight) rightHoldRef.current = false;
+
+      // Stop movement interval if neither arrow is held
+      if (!leftHoldRef.current && !rightHoldRef.current && moveIntervalRef.current != null) {
+        window.clearInterval(moveIntervalRef.current as number);
+        moveIntervalRef.current = null;
+      }
+    };
+
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
   }, [gameOver, handleDrop, resetGame]);
 
   // Audio toggle effect
@@ -151,12 +255,12 @@ export default function App() {
       <div
         style={{
           position: "absolute",
-          top: 16,
-          right: 16,
+          top: "clamp(8px, 2vw, 16px)",
+          right: "clamp(8px, 2vw, 16px)",
           display: "flex",
           flexDirection: "row",
           alignItems: "center",
-          gap: 20, // space between buttons
+          gap: "clamp(8px, 2vw, 20px)",
           zIndex: 20,
         }}
       >

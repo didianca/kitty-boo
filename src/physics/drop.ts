@@ -1,5 +1,18 @@
 import type { Item } from "../types";
-import { CANVAS_WIDTH, CONTAINER_INSET, ITEM_RADIUS_BY_LEVEL, PREVIEW_Y } from "../constants";
+import { CANVAS_WIDTH, CONTAINER_INSET, ITEM_RADIUS_BY_LEVEL, PREVIEW_Y, GRAVITY_ACCELERATION } from "../constants";
+
+// Calculate cooldown time (in milliseconds) for an item to travel 2x its diameter
+export function getDropCooldownMs(itemRadius: number): number {
+  const FRAME_RATE = 60; // Assuming 60fps animation loop
+  const distance = itemRadius * 4; // 2x diameter = 2 * (2 * radius) = 4 * radius
+  
+  // Using kinematic equation: distance = 0.5 * acceleration * time²
+  // Solving for time: time = sqrt(2 * distance / acceleration)
+  const frames = Math.sqrt(2 * distance / GRAVITY_ACCELERATION);
+  const ms = (frames / FRAME_RATE) * 1000;
+  
+  return ms;
+}
 
 export function drop(
   itemsRef: React.RefObject<Item[]>,

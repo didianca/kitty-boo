@@ -36,8 +36,8 @@ export function GameLayout({ children }: GameLayoutProps) {
         canvasRef.current.getBoundingClientRect().left -
         layoutRef.current.getBoundingClientRect().left +
         canvasRef.current.offsetWidth * 0.3;
-      // Clamp between 48px and 40vw
-      return clamp(width * 0.7, 48, window.innerWidth * 0.4);
+      // Clamp between 48px and 25vw (reduced from 40vw)
+      return clamp(width * 0.7, 48, window.innerWidth * 0.25);
     }
     return 64;
   };
@@ -48,7 +48,8 @@ export function GameLayout({ children }: GameLayoutProps) {
         layoutRef.current.getBoundingClientRect().right -
         canvasRef.current.getBoundingClientRect().right +
         canvasRef.current.offsetWidth * 0.3;
-      return clamp(width * 0.7, 48, window.innerWidth * 0.4);
+      // Clamp between 48px and 25vw (reduced from 40vw)
+      return clamp(width * 0.7, 48, window.innerWidth * 0.25);
     }
     return 64;
   };
@@ -58,10 +59,10 @@ export function GameLayout({ children }: GameLayoutProps) {
       const layoutRect = layoutRef.current.getBoundingClientRect();
       const canvasRect = canvasRef.current.getBoundingClientRect();
       const available = canvasRect.left - layoutRect.left;
-      // Increase the minimum width for mobile friendliness
-      return clamp(available * 0.7, 96, window.innerWidth * 0.4); // min 96px
+      // Clamp between 96px and 20vw (reduced from 40vw for mobile friendliness)
+      return clamp(available * 0.6, 80, window.innerWidth * 0.2);
     }
-    return 96;
+    return 80;
   };
 
   return (

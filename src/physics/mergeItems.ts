@@ -23,7 +23,7 @@ export function mergeItems(
       ) {
         const deltaX = itemB.positionX - itemA.positionX;
         const deltaY = itemB.positionY - itemA.positionY;
-        const minDistance = itemA.radius + itemB.radius;
+        const minDistance = (itemA.radius + itemB.radius) * 1.01;
         const distanceSquared = deltaX * deltaX + deltaY * deltaY;
         if (
           distanceSquared <= minDistance * minDistance &&
